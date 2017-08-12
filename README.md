@@ -1,5 +1,11 @@
 # homebridge-daikin
 
+note: this is based on the work of dirtydevwork (https://github.com/DirtyDevWork/homebridge-daikin). forked and tuned for my daikin ftxs35c splits.
+
+This fork add a timer to avoid sendind 2 discording commands at the same time to the unit, and fix an issue in loading initialization values from AC.
+
+#original readme follows:
+
 Supports Daikin Air Conditioners on HomeBridge
 
 Initially will be built to support talking to a Daikin BRP072A42 Wifi Adapter for a FTXS series Split System Air Conditioner, and once that's working, aim to add support for other Daikin Wifi adapters and Air Conditioners as the information becomes available
