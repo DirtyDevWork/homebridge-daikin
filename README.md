@@ -4,7 +4,7 @@ note: this is based on the work of dirtydevwork (https://github.com/DirtyDevWork
 
 This fork add a timer to avoid sendind 2 discording commands at the same time to the unit, and fix an issue in loading initialization values from AC.
 
-#original readme follows:
+# Original readme follows:
 
 Supports Daikin Air Conditioners on HomeBridge
 
