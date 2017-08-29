@@ -61,8 +61,13 @@ function Daikin(log, config) {
     //Characteristic.TargetHeatingCoolingState.COOL = 2;
     //Characteristic.TargetHeatingCoolingState.AUTO = 3;
     this.targetHeatingCoolingState = Characteristic.TargetHeatingCoolingState.AUTO;
+    
+    //true: auto, false: silent
+    this.AutoFan=true;
+    
     this.getCurrentHeatingCoolingState(function (){});	
-    this.service = new Service.Thermostat(this.name);
+    this.ThermostatService = new Service.Thermostat(this.name);
+    this.FanAutoSwitchService = new Service.Switch(this.name,"FanAuto")
 }
 
 function convertDaikinToJSON(input) {
@@ -110,7 +115,8 @@ Daikin.prototype = {
         this.log("Identify requested!");
         callback(null);
     },
-    // Required
+    
+    // Thermostat
     getCurrentHeatingCoolingState: function(callback) {
         this.log("getCurrentHeatingCoolingState from:", this.apiroute+"/aircon/get_control_info");
         request.get({
@@ -127,13 +133,13 @@ Daikin.prototype = {
                 } else if (json.pow == "1") {
                     // The Daikin is on
                     switch(json.mode) {
-                            // Commented cases exist for the Daikin, but not for HomeKit.
-                            // Keeping for reference while I try come up with a way to include them
-                            /*
-						case "2":
-						this.state = Characteristic.TargetHeatingCoolingState.DRY;
-						break;
-						*/
+                        // Commented cases exist for the Daikin, but not for HomeKit.
+                        // Keeping for reference while I try come up with a way to include them
+                        /*
+                        case "2":
+                        this.state = Characteristic.TargetHeatingCoolingState.DRY;
+                        break;
+                        */
                         case "3":
                             this.state = Characteristic.CurrentHeatingCoolingState.COOL;
                             this.targetHeatingCoolingState = Characteristic.TargetHeatingCoolingState.COOL;
@@ -245,46 +251,20 @@ Daikin.prototype = {
         callback(error);
     },
 
-    // Optional
-    /*
-	getCurrentRelativeHumidity: function(callback) {
-		this.log("getCurrentRelativeHumidity from:", this.apiroute+"/aircon/get_control_info");
-		request.get({
-					url: this.apiroute+"/aircon/get_control_info"
-		}, function(err, response, body) {
-			if (!err && response.statusCode == 200) {
-				this.log("response success");
-				var json = JSON.parse(body); //{"state":"OFF","stateCode":5,"temperature":"18.10","humidity":"34.10"}
-				this.log("Humidity state is %s (%s)", json.state, json.humidity);
-				this.relativeHumidity = parseFloat(json.humidity);
-				callback(null, this.relativeHumidity); // success
-			} else {
-				this.log("Error getting state: %s", err);
-				callback(err);
-			}
-		}.bind(this));
-	},
-	getTargetRelativeHumidity: function(callback) {
-		this.log("getTargetRelativeHumidity:", this.targetRelativeHumidity);
-		var error = null;
-		callback(error, this.targetRelativeHumidity);
-	},
-	setTargetRelativeHumidity: function(value, callback) {
-		this.log("setTargetRelativeHumidity from/to :", this.targetRelativeHumidity, value);
-		this.targetRelativeHumidity = value;
-		var error = null;
-		callback(error);
-	},
-	getCoolingThresholdTemperature: function(callback) {
-		this.log("getCoolingThresholdTemperature: ", this.coolingThresholdTemperature);
-		var error = null;
-		callback(error, this.coolingThresholdTemperature);
-	},
-	getHeatingThresholdTemperature: function(callback) {
-		this.log("getHeatingThresholdTemperature :" , this.heatingThresholdTemperature);
-		var error = null;
-		callback(error, this.heatingThresholdTemperature);
-	},*/
+    // Swith:  on= fan in auto, false= fan in silent
+    getOn: function(callback) {
+        this.log("getOn:", this.AutoFan);
+        var error = null;
+        callback(error, this.AutoFan);
+    },
+    setOn: function(value, callback) {
+        this.AutoFan=value;
+        this.log("setOn:", this.AutoFan);
+        var error = null;
+        callback(error);
+    },
+    
+    
     getName: function(callback) {
         this.log("getName :", this.name);
         var error = null;
@@ -306,54 +286,44 @@ Daikin.prototype = {
             .setCharacteristic(Characteristic.SerialNumber, "HTTP Serial Number");
 
         // Required Characteristics
-        this.service
+        this.ThermostatService
             .getCharacteristic(Characteristic.CurrentHeatingCoolingState)
             .on('get', this.getCurrentHeatingCoolingState.bind(this));
 
-        this.service
+        this.ThermostatService
             .getCharacteristic(Characteristic.TargetHeatingCoolingState)
             .on('get', this.getTargetHeatingCoolingState.bind(this))
             .on('set', this.setTargetHeatingCoolingState.bind(this));
 
-        this.service
+        this.ThermostatService
             .getCharacteristic(Characteristic.CurrentTemperature)
             .on('get', this.getCurrentTemperature.bind(this));
 
-        this.service
+        this.ThermostatService
             .getCharacteristic(Characteristic.TargetTemperature)
             .on('get', this.getTargetTemperature.bind(this))
             .on('set', this.setTargetTemperature.bind(this));
 
-        this.service
+        this.ThermostatService
             .getCharacteristic(Characteristic.TemperatureDisplayUnits)
             .on('get', this.getTemperatureDisplayUnits.bind(this))
             .on('set', this.setTemperatureDisplayUnits.bind(this));
 
-        // Optional Characteristics
-        /*
-		this.service
-			.getCharacteristic(Characteristic.CurrentRelativeHumidity)
-			.on('get', this.getCurrentRelativeHumidity.bind(this));
-
-		this.service
-			.getCharacteristic(Characteristic.TargetRelativeHumidity)
-			.on('get', this.getTargetRelativeHumidity.bind(this))
-			.on('set', this.setTargetRelativeHumidity.bind(this));
-
-		this.service
-			.getCharacteristic(Characteristic.CoolingThresholdTemperature)
-			.on('get', this.getCoolingThresholdTemperature.bind(this));
-
-
-		this.service
-			.getCharacteristic(Characteristic.HeatingThresholdTemperature)
-			.on('get', this.getHeatingThresholdTemperature.bind(this));
-		*/
-        this.service
+        this.ThermostatService
             .getCharacteristic(Characteristic.Name)
             .on('get', this.getName.bind(this));
 
-        return [informationService, this.service];
+        //switch
+        this.FanAutoSwitchService
+            .getCharacteristic(Characteristic.Name)
+            .on('get', this.getName.bind(this));
+        
+        this.ThermostatService
+            .getCharacteristic(Characteristic.On)
+            .on('get', this.getOn.bind(this))
+            .on('set', this.setOn.bind(this));
+        
+        return [informationService, this.ThermostatService];
     },
 
     setDaikinMode: function() {
