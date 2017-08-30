@@ -52,6 +52,12 @@ The `apiroute` is used for two main calls: Get info such as current activity and
 
 2. `/aircon` uses the GET method to set Aircon related information (e.g Target Temperature, Modes like Heat and Cool, Temperature Sensor Readings, Timers)
 
+# Notes:
+
+Every split will appear as a thermostat & a switch:
+* the thermostat will control the Split Unit
+* the switch will perform basic fan control: On => Fan in automatic, Off => fan at minimum speed
+
 # Credit
 
 This whole plugin is based on homebridge-thermostat, tuned just for Daikin units specifically. Please check out the original (https://github.com/PJCzx/homebridge-thermostat) and if you have any improvements that are not specific to Daikin systems, contribute there!
