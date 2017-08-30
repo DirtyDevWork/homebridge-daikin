@@ -1,11 +1,5 @@
 # homebridge-daikin
 
-note: this is based on the work of dirtydevwork (https://github.com/DirtyDevWork/homebridge-daikin). forked and tuned for my daikin ftxs35c splits.
-
-This fork add a timer to avoid sendind 2 discording commands at the same time to the unit, and fix an issue in loading initialization values from AC.
-
-# Original readme follows:
-
 Supports Daikin Air Conditioners on HomeBridge
 
 Initially will be built to support talking to a Daikin BRP072A42 Wifi Adapter for a FTXS series Split System Air Conditioner, and once that's working, aim to add support for other Daikin Wifi adapters and Air Conditioners as the information becomes available
@@ -57,6 +51,12 @@ The `apiroute` is used for two main calls: Get info such as current activity and
 1. `/common` uses the GET method for control and system information about the Aircon (e.g software version, MAC address, Reboot System, Region)
 
 2. `/aircon` uses the GET method to set Aircon related information (e.g Target Temperature, Modes like Heat and Cool, Temperature Sensor Readings, Timers)
+
+# Notes:
+
+Every split will appear as a thermostat & a switch:
+* the thermostat will control the Split Unit
+* the switch will perform basic fan control: On => Fan in automatic, Off => fan at minimum speed
 
 # Credit
 
