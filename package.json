@@ -1,14 +1,14 @@
 {
   "name": "homebridge-daikin",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "daikin plugin for homebridge: https://github.com/nfarina/homebridge",
   "license": "ISC",
   "keywords": [
     "homebridge-plugin"
   ],
   "engines": {
-    "node": ">=0.12.0",
-    "homebridge": ">=0.2.0"
+    "node": ">=4.3.2",
+    "homebridge": ">=0.4.46"
   },
   "author": "Dirty DevWork",
   "repository": {
@@ -16,7 +16,7 @@
     "url": "git+https://github.com/DirtyDevWork/homebridge-daikin.git"
   },
   "dependencies": {
-    "request": "^2.65.0"
+    "request": "^2.88.0"
   },
   "bugs": {
     "url": "https://github.com/DirtyDevWork/homebridge-daikin/issues"
