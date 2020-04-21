@@ -112,7 +112,10 @@ Daikin.prototype = {
 	getCurrentHeatingCoolingState: function(callback) {
 		this.log("getCurrentHeatingCoolingState from:", this.apiroute+"/aircon/get_control_info");
 		request.get({
-			url: this.apiroute+"/aircon/get_control_info"
+			url: this.apiroute+"/aircon/get_control_info",
+			headers: {
+		    	'Host': this.apiroute.replace('http://', '')
+			}
 		}, function(err, response, body) {
 			if (!err && response.statusCode == 200) {
 				this.log("response success");
@@ -174,7 +177,10 @@ Daikin.prototype = {
 	getCurrentTemperature: function(callback) {
 		this.log("getCurrentTemperature from:", this.apiroute+"/aircon/get_sensor_info");
 		request.get({
-			url: this.apiroute+"/aircon/get_sensor_info"
+			url: this.apiroute+"/aircon/get_sensor_info",
+			headers: {
+		    	'Host': this.apiroute.replace('http://', '')
+			}
 		}, function(err, response, body) {
 			if (!err && response.statusCode == 200) {
 				this.log("response success");
@@ -183,7 +189,7 @@ Daikin.prototype = {
 				this.temperature = parseFloat(json.htemp);
 				callback(null, this.temperature); // success
 			} else {
-				this.log("Error getting state: %s", err);
+				this.log("getCurrentTemperature / Error getting state: %s", err);
 				callback(err);
 			}
 		}.bind(this));
@@ -191,7 +197,10 @@ Daikin.prototype = {
 	getTargetTemperature: function(callback) {
 		this.log("getTargetTemperature from:", this.apiroute+"/aircon/get_control_info");
 		request.get({
-			url: this.apiroute+"/aircon/get_control_info"
+			url: this.apiroute+"/aircon/get_control_info",
+			headers: {
+		    	'Host': this.apiroute.replace('http://', '')
+			}
 		}, function(err, response, body) {
 			if (!err && response.statusCode == 200) {
 				this.log("response success");
@@ -200,7 +209,7 @@ Daikin.prototype = {
 				this.log("Target temperature is %s", this.targetTemperature);
 				callback(null, this.targetTemperature); // success
 			} else {
-				this.log("Error getting state: %s", err);
+				this.log("getTargetTemperature / Error getting state: %s", err);
 				callback(err);
 			}
 		}.bind(this));
@@ -228,7 +237,10 @@ Daikin.prototype = {
 	getCurrentRelativeHumidity: function(callback) {
 		this.log("getCurrentRelativeHumidity from:", this.apiroute+"/aircon/get_control_info");
 		request.get({
-					url: this.apiroute+"/aircon/get_control_info"
+					url: this.apiroute+"/aircon/get_control_info",
+					headers: {
+				    	'Host': this.apiroute.replace('http://', '')
+					}
 		}, function(err, response, body) {
 			if (!err && response.statusCode == 200) {
 				this.log("response success");
@@ -376,7 +388,10 @@ Daikin.prototype = {
 		// Finally, we send the command
 		this.log("setDaikinMode: setting pow to " + pow + ", mode to " + mode + " and stemp to " + sTemp);
 		request.get({
-			url: this.apiroute + "/aircon/set_control_info" + pow + mode + sTemp + "&shum=0"
+			url: this.apiroute + "/aircon/set_control_info" + pow + mode + sTemp + "&shum=0",
+			headers: {
+		    	'Host': this.apiroute.replace('http://', '')
+			}
 		}, function(err, response, body) {
 			if (!err && response.statusCode == 200) {
 				this.log("response success");
@@ -393,10 +408,13 @@ Daikin.prototype = {
 		// A parser for the model details will be coded here, returning the Firmware Revision, and if not set in the config
 		// file, the Name and Model as well
 		request.get({
-			url: this.apiroute+"/aircon/get_model_info"
+			url: this.apiroute+"/aircon/get_model_info",
+			headers: {
+		    	'Host': this.apiroute.replace('http://', '')
+			}
 		}, function(err, response, body) {
 			if (!err && response.statusCode == 200) {
-				this.log("response success");
+				this.log("response success - "+this.apiroute+"/aircon/get_model_info");
 				var json = JSON.parse(convertDaikinToJSON(body)); //{"pow":"1","mode":3,"stemp":"21","shum":"34.10"}
 				this.log("Your Model is: " + json.model);
 				
@@ -406,12 +424,15 @@ Daikin.prototype = {
 				} // Doesn't yet override original value, working on that later
 				
 			} else {
-				this.log("Error getting model info: %s", err);
+				this.log("getModelInfo / Error getting model info ("+response.statusCode+") : %s - "+this.apiroute+"/aircon/get_model_info", err);
 			}
 		}.bind(this));
 		
 		request.get({
-			url: this.apiroute+"/common/basic_info"
+			url: this.apiroute+"/common/basic_info",
+			headers: {
+		    	'Host': this.apiroute.replace('http://', '')
+			}
 		}, function(err, response, body) {
 			if (!err && response.statusCode == 200) {
 				this.log("response success");
@@ -426,7 +447,7 @@ Daikin.prototype = {
 				this.log("Set firmware version to " + this.firmwareRevision);
 				
 			} else {
-				this.log("Error getting basic info: %s", err);
+				this.log("getModelInfo / Error getting basic info ("+response.statusCode+") : %s - "+this.apiroute+"/common/basic_info", err);
 			}
 		}.bind(this));
 	},
