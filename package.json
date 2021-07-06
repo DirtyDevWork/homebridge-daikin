@@ -1,30 +1,97 @@
 {
-  "name": "homebridge-daikin",
-  "version": "0.1.4",
+  "name": "homebridge-daikin-local",
+  "version": "2021.26.1",
   "description": "daikin plugin for homebridge: https://github.com/nfarina/homebridge",
-  "license": "ISC",
+  "license": "MIT",
   "keywords": [
-    "homebridge-plugin"
+    "homebridge-plugin",
+    "daikin"
   ],
   "engines": {
-    "node": ">=0.12.0",
-    "homebridge": ">=0.2.0"
+    "node": ">=12.22.1",
+    "homebridge": ">=1.3.0"
   },
-  "author": "Dirty DevWork",
+  "author": "Christian Brandlehner",
+  "contributors": [
+    "Pierre-Julien Cazaux",
+    "greensouth",
+    "Fred de Gier",
+    "Fabian Leutgeb",
+    "Frank Volkmann"
+  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DirtyDevWork/homebridge-daikin.git"
+    "url": "git+https://github.com/cbrandlehner/homebridge-daikin-local.git"
   },
   "dependencies": {
-    "request": "^2.65.0"
+    "superagent": ">=6.1.0",
+    "superagent-throttle": ">=1.0.1"
   },
   "bugs": {
-    "url": "https://github.com/DirtyDevWork/homebridge-daikin/issues"
+    "url": "https://github.com/cbrandlehner/homebridge-daikin-local/issues"
   },
-  "homepage": "https://github.com/DirtyDevWork/homebridge-daikin#readme",
+  "homepage": "https://github.com/cbrandlehner/homebridge-daikin-local#readme",
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/cbrandlehner"
+    },
+    {
+      "type": "paypal",
+      "url": "https://paypal.me/CBrandlehner"
+    }
+  ],
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pretest": "eslint --ignore-path .gitignore package.json config.schema.json sample-config.json",
+    "test": "xo"
+  },
+  "devDependencies": {
+    "eslint": ">=7.17.0",
+    "eslint-plugin-json": ">=2.1.2",
+    "minimist": ">=1.2.5",
+    "xo": "=0.39.1",
+    "yargs-parser": ">=20.2.4"
+  },
+  "xo": {
+    "space": false,
+    "rules": {
+      "camelcase": "off",
+      "no-mixed-spaces-and-tabs": "warn",
+      "no-useless-escape": "warn",
+      "indent": "off",
+      "quotes": "warn",
+      "capitalized-comments": "off",
+      "no-var": "warn",
+      "prefer-destructuring": "off",
+      "prefer-arrow-callback": "warn",
+      "object-shorthand": [
+        "off",
+        "always",
+        {
+          "ignoreConstructors": true
+        }
+      ],
+      "quote-props": "error",
+      "no-unused-vars": "warn",
+      "curly": [
+        "error",
+        "multi-or-nest",
+        "consistent"
+      ],
+      "no-use-before-define": [
+        "error",
+        {
+          "classes": false
+        }
+      ],
+      "complexity": [
+        "error",
+        25
+      ],
+      "unicorn/prefer-ternary": "off",
+      "unicorn/prefer-switch": "warn",
+      "promise/prefer-await-to-then": "warn"
+    }
   }
 }
